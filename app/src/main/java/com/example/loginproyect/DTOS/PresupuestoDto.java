@@ -53,4 +53,4 @@ public class PresupuestoDto {
     public void setActivo(boolean activo) {
         this.activo = activo;
     }
-}
+}  
