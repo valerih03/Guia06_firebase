@@ -10,18 +10,27 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 public class BudgetRepository {
-    String mainNameDocument = "presupuesto";
-    private FirebaseFirestore databaseReference;
+    private final String mainNameDocument = "presupuesto";
+    private final FirebaseFirestore databaseReference;
+
     public BudgetRepository() {
         databaseReference = FirebaseFirestore.getInstance();
     }
+
     public void addBudget(Presupuesto budget, OnSuccessListener<DocumentReference> onSuccess, OnFailureListener onFailure) {
-        PresupuestoDto mainInserObject = new PresupuestoDto(budget.getNombre(), budget.getMonto(), true);
+        PresupuestoDto mainInsertObject = new PresupuestoDto(
+                budget.getNombre(),
+                budget.getMonto(),
+                budget.isActivo(),
+                budget.getUserId() // Agrega el userId al DTO
+        );
+
         databaseReference.collection(mainNameDocument)
-                .add(mainInserObject)
+                .add(mainInsertObject)
                 .addOnSuccessListener(onSuccess)
                 .addOnFailureListener(onFailure);
     }
+
     public void listenForBudgetChanges(EventListener<QuerySnapshot> listener) {
         databaseReference.collection(mainNameDocument)
                 .addSnapshotListener(listener);
